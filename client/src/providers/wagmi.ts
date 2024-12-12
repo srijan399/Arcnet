@@ -7,9 +7,18 @@ import {
   mantleSepoliaTestnet,
 } from "wagmi/chains";
 import { connectors } from "./wallets";
+import { Chain } from "@rainbow-me/rainbowkit";
+
+const chains: readonly [Chain, ...Chain[]] = [
+  sepolia,
+  mainnet,
+  baseSepolia,
+  polygonAmoy,
+  mantleSepoliaTestnet,
+];
 
 export const config = createConfig({
-  chains: [sepolia, mainnet, baseSepolia, polygonAmoy, mantleSepoliaTestnet],
+  chains,
   storage: createStorage({ storage: window.localStorage }),
   connectors,
   transports: {

@@ -1,21 +1,19 @@
-import Navbar from "../components/functions/Navbar";
-import Hero from "../components/functions/HeroSection";
-import HowItWorks from "../components/functions/HowItWorks";
-import Benefits from "../components/functions/Benefits";
-import CallToAction from "../components/functions/CallToAction";
-import Footer from "../components/functions/Footer";
+import Navbar from "@/components/functions/Navbar";
+import Hero from "@/components/functions/HeroSection";
+import CallToAction from "@/components/functions/CallToAction";
+import Footer from "@/components/functions/Footer";
+import Meteors from "@/components/ui/meteors";
 
-function App() {
+function Landing() {
   return (
-    <div className="bg-gradient-to-br from-blue-900 via-teal-800 to-purple-900 text-white min-h-screen">
+    <div className="text-text bg-background min-h-screen">
+      <Meteors number={35} />
       <Navbar />
       <Hero />
-      <HowItWorks />
-      <Benefits />
       <CallToAction />
       <Footer />
     </div>
   );
 }
 
-export default App;
+export default Landing;

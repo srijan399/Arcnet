@@ -1,22 +1,23 @@
-import Navbar from "@/components/functions/Navbar";
+import { AppSidebar } from "@/components/functions/AppSidebar";
+import Navbar from "../components/functions/Navbar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { useAccount } from "wagmi";
+// import contractAbi, { contractAddress } from "@/abi";
 
-export default function Policy() {
+function Landing() {
+  const { address } = useAccount();
+  // const contAddress: String = contractAddress;
+  // const contAbi: any = contractAbi;
+
   return (
-    <>
+    <div className="text-text bg-background min-h-screen">
       <Navbar />
-      <section className="py-16 px-6">
-        <h2 className="text-3xl font-bold mb-8 text-center">Policy</h2>
-        <div className="flex flex-col md:flex-row md:justify-around gap-6">
-          <div className="max-w-md text-center">
-            <h3 className="text-xl font-bold">For Users</h3>
-            <p>Protect your digital assets with tailored coverage plans.</p>
-          </div>
-          <div className="max-w-md text-center">
-            <h3 className="text-xl font-bold">For Liquidity Providers</h3>
-            <p>Earn attractive returns while supporting the DeFi ecosystem.</p>
-          </div>
-        </div>
-      </section>
-    </>
+      <SidebarProvider className="h-[20%]">
+        <AppSidebar head={address ? address : ""} />
+        <SidebarTrigger className="mt-2" />
+      </SidebarProvider>
+    </div>
   );
 }
+
+export default Landing;
