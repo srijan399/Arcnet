@@ -2,9 +2,10 @@ import { ethers } from "hardhat";
 
 async function main() {
   // Get the ContractFactory for the contract
-  const Insure = await ethers.deployContract("Insure");
+  const InsureCont = await ethers.getContractFactory("Insure");
 
   console.log("Deploying Insure...");
+  const Insure = await InsureCont.deploy();
 
   // Wait for the deployment to complete
   await Insure.waitForDeployment();

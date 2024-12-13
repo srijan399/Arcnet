@@ -1,0 +1,8 @@
+// Compile Contract
+npx hardhat compile
+
+// Deploy Contract
+npx hardhat run ignition/modules/Insure.ts --network mantleSepolia
+
+// Verify Contract
+npx hardhat verify --network mantleSepolia (address)
