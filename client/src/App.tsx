@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Policy from "./pages/Policies/Policy";
-import RiskPool from "./pages/RiskPool";
+import RiskPool from "./pages/RiskPool/RiskPool";
 import About from "./pages/About";
 
 function App() {

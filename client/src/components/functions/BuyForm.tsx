@@ -87,7 +87,7 @@ function BuyForm({ policy }: PolicyCardProps) {
     setTransactionHash(undefined);
 
     // Call the smart contract
-    let { coverage, duration } = data;
+    let { title, coverage, duration } = data;
     duration = duration * 30 * 24 * 60 * 60; // Convert months to seconds
     const riskFactor = policy.riskNumber;
     const premium = calcPremium();
@@ -98,7 +98,7 @@ function BuyForm({ policy }: PolicyCardProps) {
           address: contractAddress,
           abi: contractAbi,
           functionName: "purchasePolicy",
-          args: [parseEther(coverage.toString()), duration, riskFactor],
+          args: [parseEther(coverage.toString()), duration, riskFactor, title],
           value: parseEther(premium.toString()),
         },
         {

@@ -10,6 +10,31 @@ const contractAbi = [
       {
         indexed: true,
         internalType: "address",
+        name: "provider",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "enum Insure.RiskLevel",
+        name: "riskLevel",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "LiquidityAdded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
         name: "policyholder",
         type: "address",
       },
@@ -117,6 +142,80 @@ const contractAbi = [
   {
     inputs: [
       {
+        internalType: "enum Insure.RiskLevel",
+        name: "riskLevel",
+        type: "uint8",
+      },
+    ],
+    name: "addLiquidity",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_policyholder",
+        type: "address",
+      },
+    ],
+    name: "getPoliciesByAddress",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "policyholder",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "coverage",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "premium",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "duration",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "expiry",
+            type: "uint256",
+          },
+          {
+            internalType: "bool",
+            name: "claimed",
+            type: "bool",
+          },
+          {
+            internalType: "uint8",
+            name: "riskLevel",
+            type: "uint8",
+          },
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+        ],
+        internalType: "struct Insure.Policy[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "",
         type: "address",
@@ -193,6 +292,11 @@ const contractAbi = [
         name: "riskLevel",
         type: "uint8",
       },
+      {
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -248,6 +352,11 @@ const contractAbi = [
         name: "riskNumber",
         type: "uint8",
       },
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
     ],
     name: "purchasePolicy",
     outputs: [],
@@ -258,5 +367,5 @@ const contractAbi = [
 
 export default contractAbi;
 
-const contractAddress = "0x0d40cb08C17027f8d6b855406b938299e1ECaE37";
+const contractAddress = "0xbaad26584b25f373A46e96A1Bf413bCeA4758aB6";
 export { contractAddress };

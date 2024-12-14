@@ -11,3 +11,14 @@ export default interface Policy {
   };
   riskNumber: number;
 }
+
+export interface PolicyContract {
+  policyholder: string;
+  coverage: string;
+  premium: string;
+  duration: string;
+  expiry: string;
+  claimed: boolean;
+  riskLevel: string;
+  name: string;
+}

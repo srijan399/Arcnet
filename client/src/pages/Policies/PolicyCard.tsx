@@ -37,7 +37,7 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
           <span
             className={`${color} text-white text-xs font-bold px-2 py-1 rounded-full flex items-center`}
           >
-            <Icon size={12} className="mr-4" />
+            <Icon size={20} className="mr-4" />
             {policy.riskLevel} Risk
           </span>
         </div>
@@ -52,7 +52,7 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
                 View Details
               </button>
             </PopoverTrigger>
-            <PopoverContent className="bg-gray-900 text-white p-4 rounded-md shadow-md max-w-sm font-arimo">
+            <PopoverContent className="bg-gray-900 text-white p-4 rounded-md shadow-md max-w-sm font-arimo font-">
               <h3 className="text-lg font-bold mb-2">{policy.title} - Terms</h3>
               <ul className="space-y-2">
                 <li>
