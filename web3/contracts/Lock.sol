@@ -3,16 +3,6 @@ pragma solidity ^0.8.0;
 
 contract Lock {
     // Structs
-    struct Policy {
-        address policyholder;
-        uint256 coverage;
-        uint256 premium;
-        uint256 duration;
-        uint256 expiry;
-        bool claimed;
-        uint8 riskLevel;
-    }
-
     struct Pool {
         uint256 totalFunds;
         uint256 rewards;
@@ -33,7 +23,6 @@ contract Lock {
     }
 
     // Mappings
-    mapping(address => Policy[]) public policies;
     mapping(address => mapping(RiskLevel => LiquidityProvider))
         public liquidityProviders;
     mapping(RiskLevel => Pool) public pools;
@@ -43,13 +32,11 @@ contract Lock {
         address indexed policyholder,
         uint256 indexed policyId
     );
-
-    // Constants
-    uint256 public constant LOW_PREMIUM = 1;
-    uint256 public constant MEDIUM_PREMIUM = 2;
-    uint256 public constant HIGH_PREMIUM = 3;
-
-    // uint256 public constant REWARD_INTERVAL = 1 weeks;
+    event LiquidityAdded(
+        address indexed provider,
+        RiskLevel riskLevel,
+        uint256 amount
+    );
 
     // Constructor
     constructor() {
@@ -73,26 +60,27 @@ contract Lock {
         );
     }
 
-    function purchasePolicy(
-        uint256 coverage, // Coverage in wei
-        uint256 duration, // Duration in seconds
-        uint8 riskNumber // Risk Number (1 = Low, 2 = Medium, 3 = High)
-    ) public payable {
-        RiskLevel risk = RiskLevel(riskNumber - 1);
-        pools[risk].rewards += msg.value;
+    // Functions
 
-        policies[msg.sender].push(
-            Policy({
-                policyholder: msg.sender,
-                coverage: coverage,
-                premium: msg.value,
-                duration: duration,
-                expiry: block.timestamp + duration,
-                claimed: false,
-                riskLevel: riskNumber
-            })
+    // Add liquidity to a pool
+    function addLiquidity(
+        RiskLevel riskLevel
+    ) public payable poolNotExpired(riskLevel) {
+        require(msg.value > 0, "Must send ETH");
+        require(
+            pools[riskLevel].totalFunds + msg.value <= pools[riskLevel].cap,
+            "Exceeds pool cap"
         );
 
-        emit PolicyPurchased(msg.sender, policies[msg.sender].length - 1);
+        liquidityProviders[msg.sender][riskLevel].amountStaked += msg.value;
+        pools[riskLevel].totalFunds += msg.value;
+
+        emit LiquidityAdded(msg.sender, riskLevel, msg.value);
+    }
+
+    // Modifiers
+    modifier poolNotExpired(RiskLevel riskLevel) {
+        require(block.timestamp < pools[riskLevel].expiry, "Pool expired");
+        _;
     }
 }

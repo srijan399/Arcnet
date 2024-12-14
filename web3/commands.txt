@@ -5,4 +5,4 @@ npx hardhat compile
 npx hardhat run ignition/modules/Insure.ts --network mantleSepolia
 
 // Verify Contract
-npx hardhat verify --network mantleSepolia 0x0d40cb08C17027f8d6b855406b938299e1ECaE37
+npx hardhat verify --network mantleSepolia 0xbaad26584b25f373A46e96A1Bf413bCeA4758aB6

@@ -11,6 +11,7 @@ contract Insure {
         uint256 expiry;
         bool claimed;
         uint8 riskLevel;
+        string name;
     }
 
     struct Pool {
@@ -43,11 +44,11 @@ contract Insure {
         address indexed policyholder,
         uint256 indexed policyId
     );
-    // event LiquidityAdded(
-    //     address indexed provider,
-    //     RiskLevel riskLevel,
-    //     uint256 amount
-    // );
+    event LiquidityAdded(
+        address indexed provider,
+        RiskLevel riskLevel,
+        uint256 amount
+    );
     // event ClaimFiled(
     //     address indexed policyholder,
     //     uint256 indexed policyId,
@@ -94,27 +95,29 @@ contract Insure {
     }
 
     // Functions
+
     // Add liquidity to a pool
-    // function addLiquidity(
-    //     RiskLevel riskLevel
-    // ) external payable poolNotExpired(riskLevel) {
-    //     require(msg.value > 0, "Must send ETH");
-    //     require(
-    //         pools[riskLevel].totalFunds + msg.value <= pools[riskLevel].cap,
-    //         "Exceeds pool cap"
-    //     );
+    function addLiquidity(
+        RiskLevel riskLevel
+    ) public payable poolNotExpired(riskLevel) {
+        require(msg.value > 0, "Must send ETH");
+        require(
+            pools[riskLevel].totalFunds + msg.value <= pools[riskLevel].cap,
+            "Exceeds pool cap"
+        );
 
-    //     liquidityProviders[msg.sender][riskLevel].amountStaked += msg.value;
-    //     pools[riskLevel].totalFunds += msg.value;
+        liquidityProviders[msg.sender][riskLevel].amountStaked += msg.value;
+        pools[riskLevel].totalFunds += msg.value;
 
-    //     emit LiquidityAdded(msg.sender, riskLevel, msg.value);
-    // }
+        emit LiquidityAdded(msg.sender, riskLevel, msg.value);
+    }
 
     // Purchase a policy
     function purchasePolicy(
         uint256 coverage, // Coverage in wei
         uint256 duration, // Duration in seconds
-        uint8 riskNumber // Risk Number (1 = Low, 2 = Medium, 3 = High)
+        uint8 riskNumber, // Risk Number (1 = Low, 2 = Medium, 3 = High)
+        string memory _name // Name of the policy
     ) public payable {
         RiskLevel risk = RiskLevel(riskNumber - 1);
         pools[risk].rewards += msg.value;
@@ -127,11 +130,18 @@ contract Insure {
                 duration: duration,
                 expiry: block.timestamp + duration,
                 claimed: false,
-                riskLevel: riskNumber
+                riskLevel: riskNumber,
+                name: _name
             })
         );
 
         emit PolicyPurchased(msg.sender, policies[msg.sender].length - 1);
+    }
+
+    function getPoliciesByAddress(
+        address _policyholder
+    ) public view returns (Policy[] memory) {
+        return policies[_policyholder];
     }
 
     // File a claim
