@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import Pool from "../interfaces/Pool";
-import { useAccount, useWriteContract } from "wagmi";
+import { useWriteContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import { useState } from "react";
 import { parseEther } from "viem";
@@ -53,9 +53,6 @@ export default function FundForm(pool: Pool) {
     High: 2,
   };
 
-  const account = useAccount();
-  const accAddress = account?.address;
-
   const [transactionStatus, setTransactionStatus] = useState<string | null>(
     null
   );
@@ -63,7 +60,7 @@ export default function FundForm(pool: Pool) {
     undefined
   );
 
-  const { status, writeContractAsync, isPending } = useWriteContract();
+  const { writeContractAsync } = useWriteContract();
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     console.log("Form Submission Data:", data);
