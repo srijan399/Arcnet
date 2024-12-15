@@ -1,17 +1,6 @@
 // components/RiskPools.jsx
 
 const RiskPools = () => {
-  const pools = [
-    {
-      name: "Crypto Exchange Pool",
-      coverage: "$10M",
-      risk: "Medium",
-      apy: "8%",
-    },
-    { name: "Smart Contract Pool", coverage: "$5M", risk: "High", apy: "12%" },
-    { name: "DeFi Pool", coverage: "$7M", risk: "Low", apy: "6%" },
-  ];
-
   return (
     <section className="py-16 px-6 bg-gray-900">
       <h2 className="text-3xl font-bold mb-8 text-center">

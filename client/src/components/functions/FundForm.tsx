@@ -60,6 +60,7 @@ export default function FundForm(pool: Pool) {
     undefined
   );
 
+  console.log(transactionHash, transactionStatus);
   const { writeContractAsync } = useWriteContract();
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
