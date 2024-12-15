@@ -15,7 +15,6 @@ import { useState, useEffect } from "react";
 import contractAbi, { contractAddress } from "@/abi";
 import { formatEther } from "viem";
 import Details from "./Details";
-import { Link } from "react-router-dom";
 
 interface RiskPoolCardProps {
   pool: Pool;
@@ -61,7 +60,7 @@ export default function RiskPoolCard(pool: RiskPoolCardProps) {
     };
   }, [refetch]);
 
-  console.log(riskLevelIndex);
+  console.log(riskLevelIndex, data, poolData);
 
   return (
     <>

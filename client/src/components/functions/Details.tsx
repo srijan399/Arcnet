@@ -1,9 +1,9 @@
-import { useAccount, useReadContract } from "wagmi";
+import { useReadContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import { useEffect, useState } from "react";
-import Navbar from "@/components/functions/Navbar";
+// import Navbar from "@/components/functions/Navbar";
 import { LiquidityProvider } from "@/components/interfaces/Pool";
-import { formatEther } from "viem";
+// import { formatEther } from "viem";
 
 export default function Details(props: any) {
   console.log("Account Det: ", props.address);
@@ -36,7 +36,7 @@ export default function Details(props: any) {
     };
   }, [refetch]);
 
-  console.log("providerData: ", providerData);
+  console.log("providerData: ", providerData, data);
 
   return (
     <>

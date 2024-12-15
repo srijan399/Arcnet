@@ -78,7 +78,10 @@ function BuyForm({ policy }: PolicyCardProps) {
     undefined
   );
 
-  const { status, writeContractAsync, isPending } = useWriteContract();
+  const dub = { transactionHash, transactionStatus };
+  console.log(dub);
+
+  const { writeContractAsync } = useWriteContract();
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     console.log("Form Submission Data:", data);
