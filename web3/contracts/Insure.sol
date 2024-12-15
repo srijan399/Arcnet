@@ -78,19 +78,19 @@ contract Insure {
             0,
             0,
             100 ether,
-            block.timestamp + 180 days
+            block.timestamp + 200 days
         );
         pools[RiskLevel.Medium] = Pool(
             0,
             0,
             200 ether,
-            block.timestamp + 180 days
+            block.timestamp + 250 days
         );
         pools[RiskLevel.High] = Pool(
             0,
             0,
             300 ether,
-            block.timestamp + 180 days
+            block.timestamp + 270 days
         );
     }
 
@@ -110,6 +110,20 @@ contract Insure {
         pools[riskLevel].totalFunds += msg.value;
 
         emit LiquidityAdded(msg.sender, riskLevel, msg.value);
+    }
+
+    function getLiquidityProviderDetails(
+        RiskLevel riskLevel,
+        address _provider
+    ) public view returns (LiquidityProvider memory) {
+        return liquidityProviders[_provider][riskLevel];
+    }
+
+    // Get pool information by risk level
+    function getPoolByRiskLevel(
+        RiskLevel riskLevel
+    ) public view returns (Pool memory) {
+        return pools[riskLevel];
     }
 
     // Purchase a policy

@@ -155,6 +155,42 @@ const contractAbi = [
   {
     inputs: [
       {
+        internalType: "enum Insure.RiskLevel",
+        name: "riskLevel",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "_provider",
+        type: "address",
+      },
+    ],
+    name: "getLiquidityProviderDetails",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "amountStaked",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "rewardsEarned",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Insure.LiquidityProvider",
+        name: "",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "_policyholder",
         type: "address",
@@ -208,6 +244,47 @@ const contractAbi = [
         internalType: "struct Insure.Policy[]",
         name: "",
         type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "enum Insure.RiskLevel",
+        name: "riskLevel",
+        type: "uint8",
+      },
+    ],
+    name: "getPoolByRiskLevel",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "totalFunds",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "rewards",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "cap",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "expiry",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Insure.Pool",
+        name: "",
+        type: "tuple",
       },
     ],
     stateMutability: "view",
@@ -367,5 +444,5 @@ const contractAbi = [
 
 export default contractAbi;
 
-const contractAddress = "0xbaad26584b25f373A46e96A1Bf413bCeA4758aB6";
+const contractAddress = "0x9f32bb7276AaEf947ae38046cf45343423fD370f";
 export { contractAddress };

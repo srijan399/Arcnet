@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import PolicyCard from "./PolicyCard";
+import PolicyCard from "../../components/functions/PolicyCard";
 import Navbar from "@/components/functions/Navbar";
 import { policyList } from "./policies";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export default function PoliciesPage() {
     const interval = setInterval(() => {
       refetch()
         .then((result: any) => {
-          console.log("Data refetched: ", result);
+          console.log("My policy Data refetched: ", result);
           setMyPolicies(result.data as PolicyContract[]);
         })
         .catch((error: any) => {
@@ -86,36 +86,46 @@ export default function PoliciesPage() {
         </button>
         <h2 className="text-white text-2xl mb-4">Your Policies</h2>
         <div className="space-y-4">
-          {myPolicies.map((policy) => (
-            <div
-              key={policy.policyholder}
-              className="bg-gray-800 p-4 rounded-lg shadow-md text-white"
-            >
-              <h3 className="text-lg font-bold">{policy.name}</h3>
-              <p className="text-sm text-gray-300 mt-2">{policy.coverage}</p>
-              <p className="text-sm text-gray-300 mt-2">{policy.premium}</p>
-              <div className="flex justify-between items-center mt-4">
-                <div>
-                  <p className="text-sm">
-                    <span className="font-semibold">Duration:</span>{" "}
-                    {Number(policy.duration) / (60 * 60 * 24) / 30} months
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-semibold">Expiry:</span>{" "}
-                    {new Date(Number(policy.expiry) * 1000).toLocaleDateString(
-                      "en-GB"
-                    )}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleClaim()}
-                  className="bg-blue-600 hover:bg-blue-500 text-sm px-4 py-2 rounded-lg"
+          {myPolicies.length ? (
+            myPolicies.length !== 0 ? (
+              myPolicies.map((policy) => (
+                <div
+                  key={policy.policyholder}
+                  className="bg-gray-800 p-4 rounded-lg shadow-md text-white"
                 >
-                  Claim
-                </button>
-              </div>
-            </div>
-          ))}
+                  <h3 className="text-lg font-bold">{policy.name}</h3>
+                  <p className="text-sm text-gray-300 mt-2">
+                    {policy.coverage}
+                  </p>
+                  <p className="text-sm text-gray-300 mt-2">{policy.premium}</p>
+                  <div className="flex justify-between items-center mt-4">
+                    <div>
+                      <p className="text-sm">
+                        <span className="font-semibold">Duration:</span>{" "}
+                        {Number(policy.duration) / (60 * 60 * 24) / 30} months
+                      </p>
+                      <p className="text-sm">
+                        <span className="font-semibold">Expiry:</span>{" "}
+                        {new Date(
+                          Number(policy.expiry) * 1000
+                        ).toLocaleDateString("en-GB")}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleClaim()}
+                      className="bg-blue-600 hover:bg-blue-500 text-sm px-4 py-2 rounded-lg"
+                    >
+                      Claim
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-white">No policies found</p>
+            )
+          ) : (
+            <p className="text-white">Loading policies...</p>
+          )}
         </div>
       </div>
 

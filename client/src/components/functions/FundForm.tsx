@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import Pool from "../interfaces/Pool";
-import { useWriteContract } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import { useState } from "react";
 import { parseEther } from "viem";
@@ -52,6 +52,9 @@ export default function FundForm(pool: Pool) {
     Medium: 1,
     High: 2,
   };
+
+  const account = useAccount();
+  const accAddress = account?.address;
 
   const [transactionStatus, setTransactionStatus] = useState<string | null>(
     null
@@ -115,10 +118,10 @@ export default function FundForm(pool: Pool) {
     <DialogContent className="sm:max-w-[425px] text-text font-robomon">
       <DialogHeader>
         <DialogTitle className="text-center text-2xl">
-          Purchase Policy
+          Funding Policy
         </DialogTitle>
         <DialogDescription className="text-center">
-          Make sure to have read the terms and conditions before purchasing.
+          Make sure to have read the terms before funding.
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
@@ -137,7 +140,7 @@ export default function FundForm(pool: Pool) {
                   <Input type="number" placeholder="10 ETH" {...field} />
                 </FormControl>
                 <FormDescription>
-                  Coverage must be between less than Pool Cap
+                  Funding amount must be between less than Pool Cap
                 </FormDescription>
                 <FormMessage className="text-red-600" />
               </FormItem>

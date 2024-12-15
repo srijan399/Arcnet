@@ -7,5 +7,13 @@ export default interface Pool {
 }
 
 export interface PoolContract {
-  fund: number;
+  totalFunds: number;
+  rewards: number;
+  cap: number;
+  expiry: number;
+}
+
+export interface LiquidityProvider {
+  amountStaked: number;
+  rewardsEarned: number;
 }

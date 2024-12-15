@@ -3,6 +3,17 @@ pragma solidity ^0.8.0;
 
 contract Lock {
     // Structs
+    struct Policy {
+        address policyholder;
+        uint256 coverage;
+        uint256 premium;
+        uint256 duration;
+        uint256 expiry;
+        bool claimed;
+        uint8 riskLevel;
+        string name;
+    }
+
     struct Pool {
         uint256 totalFunds;
         uint256 rewards;
@@ -23,6 +34,7 @@ contract Lock {
     }
 
     // Mappings
+    mapping(address => Policy[]) public policies;
     mapping(address => mapping(RiskLevel => LiquidityProvider))
         public liquidityProviders;
     mapping(RiskLevel => Pool) public pools;
@@ -37,6 +49,18 @@ contract Lock {
         RiskLevel riskLevel,
         uint256 amount
     );
+    // event ClaimFiled(
+    //     address indexed policyholder,
+    //     uint256 indexed policyId,
+    //     uint256 amount
+    // );
+    // event ClaimApproved(
+    //     address indexed policyholder,
+    //     uint256 indexed policyId,
+    //     uint256 amount
+    // );
+    event RewardsDistributed(RiskLevel indexed riskLevel, uint256 totalRewards);
+    uint256 public constant REWARD_INTERVAL = 1 weeks;
 
     // Constructor
     constructor() {
@@ -44,43 +68,55 @@ contract Lock {
             0,
             0,
             100 ether,
-            block.timestamp + 180 days
+            block.timestamp + 200 days
         );
         pools[RiskLevel.Medium] = Pool(
             0,
             0,
             200 ether,
-            block.timestamp + 180 days
+            block.timestamp + 250 days
         );
         pools[RiskLevel.High] = Pool(
             0,
             0,
             300 ether,
-            block.timestamp + 180 days
+            block.timestamp + 270 days
         );
     }
 
     // Functions
 
-    // Add liquidity to a pool
-    function addLiquidity(
+    // Distribute rewards to LPs
+    function distributeRewards(
         RiskLevel riskLevel
-    ) public payable poolNotExpired(riskLevel) {
-        require(msg.value > 0, "Must send ETH");
-        require(
-            pools[riskLevel].totalFunds + msg.value <= pools[riskLevel].cap,
-            "Exceeds pool cap"
-        );
+    ) external poolNotExpired(riskLevel) {
+        Pool storage pool = pools[riskLevel];
+        uint256 totalRewards = pool.rewards;
+        pool.rewards = 0;
 
-        liquidityProviders[msg.sender][riskLevel].amountStaked += msg.value;
-        pools[riskLevel].totalFunds += msg.value;
+        for (uint256 i = 0; i < address(this).balance; i++) {
+            LiquidityProvider storage lp = liquidityProviders[msg.sender][
+                riskLevel
+            ];
+            uint256 share = (lp.amountStaked * totalRewards) / pool.totalFunds;
+            lp.rewardsEarned += share;
+            payable(msg.sender).transfer(share);
+        }
 
-        emit LiquidityAdded(msg.sender, riskLevel, msg.value);
+        emit RewardsDistributed(riskLevel, totalRewards);
     }
 
     // Modifiers
     modifier poolNotExpired(RiskLevel riskLevel) {
         require(block.timestamp < pools[riskLevel].expiry, "Pool expired");
+        _;
+    }
+
+    modifier onlyPolicyHolder(uint256 policyId) {
+        require(
+            policies[msg.sender][policyId].policyholder == msg.sender,
+            "Not policyholder"
+        );
         _;
     }
 }

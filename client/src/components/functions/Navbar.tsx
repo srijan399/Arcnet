@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-opacity-30 backdrop-blur-md flex justify-between items-center p-4 px-8 shadow-lg">
       <Link to="/" className="text-2xl font-bold font-play">
-        <h1 className="text-3xl font-bold font-libre">Arcnet</h1>
+        <span className="text-3xl font-bold font-libre">Arcnet</span>
       </Link>
       <div className="flex items-center space-x-8">
         <ul className="flex space-x-7">
