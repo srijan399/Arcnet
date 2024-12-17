@@ -49,82 +49,23 @@ const contractAbi = [
     type: "event",
   },
   {
-    inputs: [],
-    name: "HIGH_COVERAGE",
-    outputs: [
+    anonymous: false,
+    inputs: [
       {
+        indexed: true,
+        internalType: "enum Insure.RiskLevel",
+        name: "riskLevel",
+        type: "uint8",
+      },
+      {
+        indexed: false,
         internalType: "uint256",
-        name: "",
+        name: "totalRewards",
         type: "uint256",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "HIGH_PREMIUM",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "LOW_COVERAGE",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "LOW_PREMIUM",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "MEDIUM_COVERAGE",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "MEDIUM_PREMIUM",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    name: "RewardsDistributed",
+    type: "event",
   },
   {
     inputs: [],
@@ -150,6 +91,19 @@ const contractAbi = [
     name: "addLiquidity",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "enum Insure.RiskLevel",
+        name: "riskLevel",
+        type: "uint8",
+      },
+    ],
+    name: "claimRewards",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -322,6 +276,30 @@ const contractAbi = [
   {
     inputs: [
       {
+        internalType: "enum Insure.RiskLevel",
+        name: "",
+        type: "uint8",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "liquidityProvidersList",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "",
         type: "address",
@@ -444,5 +422,5 @@ const contractAbi = [
 
 export default contractAbi;
 
-const contractAddress = "0x9f32bb7276AaEf947ae38046cf45343423fD370f";
+const contractAddress = "0x384Cce492d10C8cDe73877BB203944E76eb1ba51";
 export { contractAddress };

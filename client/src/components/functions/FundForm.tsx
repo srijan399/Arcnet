@@ -113,7 +113,7 @@ export default function FundForm(pool: Pool) {
   }
 
   return (
-    <DialogContent className="sm:max-w-[425px] text-text font-robomon">
+    <DialogContent className="sm:max-w-[425px] text-text font-robomon md:px-8">
       <DialogHeader>
         <DialogTitle className="text-center text-2xl">
           Funding Policy

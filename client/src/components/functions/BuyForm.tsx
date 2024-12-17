@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -77,6 +78,7 @@ function BuyForm({ policy }: PolicyCardProps) {
   const [transactionHash, setTransactionHash] = useState<string | undefined>(
     undefined
   );
+  const [isOpen, setIsOpen] = useState(true);
 
   const dub = { transactionHash, transactionStatus };
   console.log(dub);
@@ -142,35 +144,30 @@ function BuyForm({ policy }: PolicyCardProps) {
   }
 
   return (
-    <DialogContent className="sm:max-w-[425px] text-text font-robomon">
+    <DialogContent className="w-[90%] sm:max-w-[425px] p-4 sm:p-6 text-text font-robomon">
       <DialogHeader>
-        <DialogTitle className="text-center text-2xl">
+        <DialogTitle className="text-center text-xl sm:text-2xl">
           Purchase Policy
         </DialogTitle>
-        <DialogDescription className="text-center">
+        <DialogDescription className="text-center text-sm sm:text-base">
           Make sure to have read the terms and conditions before purchasing.
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Display Title, Risk Level, and Description */}
-          <div className=" text-primary">
+          <div className="text-primary text-sm sm:text-base">
             <div>
-              <strong className="font-bold text-lg">Title:</strong>{" "}
-              {policy.title}
+              <strong className="font-bold">Title:</strong> {policy.title}
             </div>
             <div>
-              <strong className="font-bold text-lg">Risk Level:</strong>{" "}
+              <strong className="font-bold">Risk Level:</strong>{" "}
               {policy.riskLevel}
             </div>
             <div>
-              <strong className="font-bold text-lg">Description:</strong>{" "}
+              <strong className="font-bold">Description:</strong>{" "}
               {policy.description}
             </div>
-            {/* <div>
-              <strong className="font-bold text-lg">Risk Factor:</strong>{" "}
-              {policy.riskNumber}
-            </div> */}
           </div>
 
           {/* Coverage Field */}
@@ -179,14 +176,21 @@ function BuyForm({ policy }: PolicyCardProps) {
             name="coverage"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Coverage (in ETH)</FormLabel>
+                <FormLabel className="text-sm sm:text-base">
+                  Coverage (in ETH)
+                </FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Coverage" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="Coverage"
+                    {...field}
+                    className="text-sm px-2 py-1 sm:px-3 sm:py-2"
+                  />
                 </FormControl>
-                <FormDescription>
+                <FormDescription className="text-xs sm:text-sm">
                   Coverage must be between 5-20 ETH.
                 </FormDescription>
-                <FormMessage className="text-red-600" />
+                <FormMessage className="text-red-600 text-xs sm:text-sm" />
               </FormItem>
             )}
           />
@@ -197,19 +201,26 @@ function BuyForm({ policy }: PolicyCardProps) {
             name="duration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Duration (in months)</FormLabel>
+                <FormLabel className="text-sm sm:text-base">
+                  Duration (in months)
+                </FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Duration" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="Duration"
+                    {...field}
+                    className="text-sm px-2 py-1 sm:px-3 sm:py-2"
+                  />
                 </FormControl>
-                <FormDescription>
+                <FormDescription className="text-xs sm:text-sm">
                   Duration must be between 3-6 months.
                 </FormDescription>
-                <FormMessage className="text-red-600" />
+                <FormMessage className="text-red-600 text-xs sm:text-sm" />
               </FormItem>
             )}
           />
 
-          {/* Hidden Inputs for Title, Risk Level, and Description */}
+          {/* Hidden Inputs */}
           <input
             type="hidden"
             {...form.register("title")}
@@ -225,22 +236,19 @@ function BuyForm({ policy }: PolicyCardProps) {
             {...form.register("riskLevel")}
             value={policy.riskLevel}
           />
-          {/* <input
-            type="hidden"
-            {...form.register("riskNumber")}
-            value={policy.riskNumber}
-          /> */}
-          <div className="flex justify-between">
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0 sm:space-x-4">
             <Button
               type="button"
               onClick={calcPremium}
-              className="text-text bg-red-950 outline-double"
+              className="w-full sm:w-auto text-text bg-red-950 outline-double px-3 py-2 text-sm"
             >
               Calculate Premium
             </Button>
             <Button
               type="submit"
-              className="text-text bg-red-950 outline-double"
+              className="w-full sm:w-auto text-text bg-red-950 outline-double px-3 py-2 text-sm"
             >
               Get Policy
             </Button>

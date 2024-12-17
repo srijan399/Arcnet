@@ -45,12 +45,12 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
         <div className="flex justify-between items-center">
           <Popover>
             <PopoverTrigger asChild>
-              <button
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+              <Button
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200 mr-2"
                 aria-label={`View details for ${policy.title}`}
               >
                 View Details
-              </button>
+              </Button>
             </PopoverTrigger>
             <PopoverContent className="bg-gray-900 text-white p-4 rounded-md shadow-md max-w-sm font-arimo font-">
               <h3 className="text-lg font-bold mb-2">{policy.title} - Terms</h3>

@@ -6,7 +6,6 @@ import { LiquidityProvider } from "@/components/interfaces/Pool";
 // import { formatEther } from "viem";
 
 export default function Details(props: any) {
-  console.log("Account Det: ", props.address);
   const { data, refetch } = useReadContract({
     abi: contractAbi,
     address: contractAddress,
@@ -14,9 +13,11 @@ export default function Details(props: any) {
     args: [props.riskLevel, props.address], // Only pass the risk level now
   });
 
-  const [providerData, setProviderData] = useState<LiquidityProvider>(
-    {} as LiquidityProvider
-  );
+  // const [providerData, setProviderData] = useState<LiquidityProvider>(
+  //   {} as LiquidityProvider
+  // );
+
+  const { providerData, setProviderData } = props;
 
   useEffect(() => {
     console.log("Setting up refetch interval");
@@ -36,7 +37,7 @@ export default function Details(props: any) {
     };
   }, [refetch]);
 
-  console.log("providerData: ", providerData, data);
+  // console.log(data);
 
   return (
     <>
@@ -48,7 +49,7 @@ export default function Details(props: any) {
           </p>
           <p>
             <strong className="font-bold">Rewards earned:</strong>{" "}
-            {Number(providerData.rewardsEarned) / 10 ** 18} ETH
+            {(Number(providerData.rewardsEarned) / 10 ** 18).toFixed(2)} MNT
           </p>
         </div>
       ) : (
