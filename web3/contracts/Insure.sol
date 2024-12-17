@@ -4,12 +4,14 @@ pragma solidity ^0.8.0;
 contract Insure {
     // Structs
     struct Policy {
+        uint256 policyId;
         address policyholder;
         uint256 coverage;
         uint256 premium;
         uint256 duration;
         uint256 expiry;
         bool claimed;
+        string reason;
         uint8 riskLevel;
         string name;
     }
@@ -38,6 +40,9 @@ contract Insure {
     mapping(address => mapping(RiskLevel => LiquidityProvider))
         public liquidityProviders;
     mapping(RiskLevel => Pool) public pools;
+    // Maintain a list of addresses for each risk level
+    mapping(RiskLevel => address[]) public liquidityProvidersList;
+    mapping(address => mapping(RiskLevel => uint256)) public lastClaimed;
 
     // Events
     event PolicyPurchased(
@@ -49,26 +54,17 @@ contract Insure {
         RiskLevel riskLevel,
         uint256 amount
     );
-    // event ClaimFiled(
-    //     address indexed policyholder,
-    //     uint256 indexed policyId,
-    //     uint256 amount
-    // );
-    // event ClaimApproved(
-    //     address indexed policyholder,
-    //     uint256 indexed policyId,
-    //     uint256 amount
-    // );
-    // event RewardsDistributed(RiskLevel indexed riskLevel, uint256 totalRewards);
-
-    // Constants
-    uint256 public constant LOW_PREMIUM = 1;
-    uint256 public constant MEDIUM_PREMIUM = 2;
-    uint256 public constant HIGH_PREMIUM = 3;
-
-    uint256 public constant LOW_COVERAGE = 10 ether;
-    uint256 public constant MEDIUM_COVERAGE = 30 ether;
-    uint256 public constant HIGH_COVERAGE = 50 ether;
+    event ClaimFiled(
+        address indexed policyholder,
+        uint256 indexed policyId,
+        uint256 amount
+    );
+    event ClaimApproved(
+        address indexed policyholder,
+        uint256 indexed policyId,
+        uint256 amount
+    );
+    event RewardsDistributed(RiskLevel indexed riskLevel, uint256 totalRewards);
 
     uint256 public constant REWARD_INTERVAL = 1 weeks;
 
@@ -106,6 +102,11 @@ contract Insure {
             "Exceeds pool cap"
         );
 
+        // Check if this is the first contribution
+        if (liquidityProviders[msg.sender][riskLevel].amountStaked == 0) {
+            liquidityProvidersList[riskLevel].push(msg.sender);
+        }
+
         liquidityProviders[msg.sender][riskLevel].amountStaked += msg.value;
         pools[riskLevel].totalFunds += msg.value;
 
@@ -131,19 +132,22 @@ contract Insure {
         uint256 coverage, // Coverage in wei
         uint256 duration, // Duration in seconds
         uint8 riskNumber, // Risk Number (1 = Low, 2 = Medium, 3 = High)
-        string memory _name // Name of the policy
+        string memory _name, // Name of the policy
+        uint256 policyID
     ) public payable {
         RiskLevel risk = RiskLevel(riskNumber - 1);
         pools[risk].rewards += msg.value;
 
         policies[msg.sender].push(
             Policy({
+                policyId: policyID,
                 policyholder: msg.sender,
                 coverage: coverage,
                 premium: msg.value,
                 duration: duration,
                 expiry: block.timestamp + duration,
                 claimed: false,
+                reason: "",
                 riskLevel: riskNumber,
                 name: _name
             })
@@ -159,60 +163,81 @@ contract Insure {
     }
 
     // File a claim
-    // function fileClaim(
-    //     uint256 policyId,
-    //     uint256 claimAmount
-    // ) external onlyPolicyHolder(policyId) {
-    //     Policy storage policy = policies[msg.sender][policyId];
-    //     require(block.timestamp < policy.expiry, "Policy expired");
-    //     require(!policy.claimed, "Policy already claimed");
-    //     require(claimAmount <= policy.coverage, "Claim exceeds coverage");
+    function fileClaim(
+        uint256 policyId,
+        uint256 claimAmount,
+        string memory reason
+    ) external {
+        // Find the policy in the user's array of policies
+        Policy[] storage userPolicies = policies[msg.sender];
+        bool policyFound = false;
 
-    //     RiskLevel risk = RiskLevel(policy.riskLevel);
-    //     require(
-    //         claimAmount <= pools[risk].totalFunds,
-    //         "Insufficient pool funds"
-    //     );
+        for (uint256 i = 0; i < userPolicies.length; i++) {
+            if (userPolicies[i].policyId == policyId) {
+                Policy storage policy = userPolicies[i];
 
-    //     policy.claimed = true;
-    //     pools[risk].totalFunds -= claimAmount;
-    //     payable(msg.sender).transfer(claimAmount);
+                // Ensure the caller is the policyholder
+                require(policy.policyholder == msg.sender, "Not policyholder");
 
-    //     emit ClaimFiled(msg.sender, policyId, claimAmount);
-    //     emit ClaimApproved(msg.sender, policyId, claimAmount);
-    // }
+                // Perform policy checks
+                require(block.timestamp < policy.expiry, "Policy expired");
+                require(!policy.claimed, "Policy already claimed");
+                require(
+                    claimAmount <= policy.coverage,
+                    "Claim exceeds coverage"
+                );
 
-    // // Distribute rewards to LPs
-    // function distributeRewards(
-    //     RiskLevel riskLevel
-    // ) external poolNotExpired(riskLevel) {
-    //     Pool storage pool = pools[riskLevel];
-    //     uint256 totalRewards = pool.rewards;
-    //     pool.rewards = 0;
+                RiskLevel risk = RiskLevel(policy.riskLevel);
+                require(
+                    claimAmount <= pools[risk].totalFunds,
+                    "Insufficient pool funds"
+                );
 
-    //     for (uint256 i = 0; i < address(this).balance; i++) {
-    //         LiquidityProvider storage lp = liquidityProviders[msg.sender][
-    //             riskLevel
-    //         ];
-    //         uint256 share = (lp.amountStaked * totalRewards) / pool.totalFunds;
-    //         lp.rewardsEarned += share;
-    //         payable(msg.sender).transfer(share);
-    //     }
+                // Update policy and pool state
+                policy.claimed = true;
+                pools[risk].totalFunds -= claimAmount;
+                payable(msg.sender).transfer(claimAmount);
+                policy.reason = reason;
 
-    //     emit RewardsDistributed(riskLevel, totalRewards);
-    // }
+                // Emit events
+                emit ClaimFiled(msg.sender, policyId, claimAmount);
+                emit ClaimApproved(msg.sender, policyId, claimAmount);
+
+                policyFound = true;
+                break;
+            }
+        }
+
+        // Revert if the policyId was not found
+        require(policyFound, "Policy not found");
+    }
+
+    // Distribute rewards to LPs
+    // Calculate and allow the provider to claim their rewards
+    function claimRewards(RiskLevel riskLevel) external {
+        LiquidityProvider storage lp = liquidityProviders[msg.sender][
+            riskLevel
+        ];
+        Pool storage pool = pools[riskLevel];
+
+        require(lp.amountStaked > 0, "No liquidity provided");
+        require(pool.totalFunds > 0, "No funds in the pool");
+        require(pool.rewards > 0, "No rewards available");
+
+        uint256 share = (lp.amountStaked * pool.rewards) / pool.totalFunds;
+        pool.rewards -= share;
+        lp.rewardsEarned += share;
+
+        // Transfer rewards to the provider
+        (bool success, ) = payable(msg.sender).call{value: share}("");
+        require(success, "Transfer failed");
+
+        emit RewardsDistributed(riskLevel, share);
+    }
 
     // Modifiers
     modifier poolNotExpired(RiskLevel riskLevel) {
         require(block.timestamp < pools[riskLevel].expiry, "Pool expired");
-        _;
-    }
-
-    modifier onlyPolicyHolder(uint256 policyId) {
-        require(
-            policies[msg.sender][policyId].policyholder == msg.sender,
-            "Not policyholder"
-        );
         _;
     }
 }

@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 contract Lock {
     // Structs
     struct Policy {
+        uint256 policyId;
         address policyholder;
         uint256 coverage;
         uint256 premium;
@@ -38,28 +39,12 @@ contract Lock {
     mapping(address => mapping(RiskLevel => LiquidityProvider))
         public liquidityProviders;
     mapping(RiskLevel => Pool) public pools;
+    // Maintain a list of addresses for each risk level
+    mapping(RiskLevel => address[]) public liquidityProvidersList;
+    mapping(address => mapping(RiskLevel => uint256)) public lastClaimed;
 
-    // Events
-    event PolicyPurchased(
-        address indexed policyholder,
-        uint256 indexed policyId
-    );
-    event LiquidityAdded(
-        address indexed provider,
-        RiskLevel riskLevel,
-        uint256 amount
-    );
-    // event ClaimFiled(
-    //     address indexed policyholder,
-    //     uint256 indexed policyId,
-    //     uint256 amount
-    // );
-    // event ClaimApproved(
-    //     address indexed policyholder,
-    //     uint256 indexed policyId,
-    //     uint256 amount
-    // );
     event RewardsDistributed(RiskLevel indexed riskLevel, uint256 totalRewards);
+
     uint256 public constant REWARD_INTERVAL = 1 weeks;
 
     // Constructor
@@ -86,37 +71,44 @@ contract Lock {
 
     // Functions
 
-    // Distribute rewards to LPs
-    function distributeRewards(
-        RiskLevel riskLevel
-    ) external poolNotExpired(riskLevel) {
-        Pool storage pool = pools[riskLevel];
-        uint256 totalRewards = pool.rewards;
-        pool.rewards = 0;
+    // Purchase a policy
+    function purchasePolicy(
+        uint256 coverage, // Coverage in wei
+        uint256 duration, // Duration in seconds
+        uint8 riskNumber, // Risk Number (1 = Low, 2 = Medium, 3 = High)
+        string memory _name, // Name of the policy
+        uint256 policyID
+    ) public payable {
+        RiskLevel risk = RiskLevel(riskNumber - 1);
+        pools[risk].rewards += msg.value;
 
-        for (uint256 i = 0; i < address(this).balance; i++) {
-            LiquidityProvider storage lp = liquidityProviders[msg.sender][
-                riskLevel
-            ];
-            uint256 share = (lp.amountStaked * totalRewards) / pool.totalFunds;
-            lp.rewardsEarned += share;
-            payable(msg.sender).transfer(share);
-        }
-
-        emit RewardsDistributed(riskLevel, totalRewards);
-    }
-
-    // Modifiers
-    modifier poolNotExpired(RiskLevel riskLevel) {
-        require(block.timestamp < pools[riskLevel].expiry, "Pool expired");
-        _;
+        policies[msg.sender].push(
+            Policy({
+                policyId: policyID,
+                policyholder: msg.sender,
+                coverage: coverage,
+                premium: msg.value,
+                duration: duration,
+                expiry: block.timestamp + duration,
+                claimed: false,
+                riskLevel: riskNumber,
+                name: _name
+            })
+        );
     }
 
     modifier onlyPolicyHolder(uint256 policyId) {
-        require(
-            policies[msg.sender][policyId].policyholder == msg.sender,
-            "Not policyholder"
-        );
+        bool isPolicyHolder = false;
+
+        // Search through the policies array to verify the caller owns the policy
+        for (uint256 i = 0; i < policies[msg.sender].length; i++) {
+            if (policies[msg.sender][i].policyId == policyId) {
+                isPolicyHolder = true;
+                break;
+            }
+        }
+
+        require(isPolicyHolder, "Not the policyholder");
         _;
     }
 }
