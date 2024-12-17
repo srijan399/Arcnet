@@ -23,6 +23,7 @@ import { useWriteContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import { useState } from "react";
 import { parseEther } from "viem";
+import { toast } from "sonner";
 
 interface PolicyCardProps {
   policy: Policy;
@@ -146,6 +147,10 @@ function BuyForm({ policy }: PolicyCardProps) {
     const { coverage, duration } = form.getValues();
     const premium = (coverage * duration * policy.riskNumber) / (12 * 3);
     console.log(`Your One Time premium is ${premium} MNT`);
+    toast.success("Premium Calculated", {
+      description: `Your one-time premium is ${premium.toFixed(2)} MNT`,
+      duration: 3000, // Optional: specify duration
+    });
     return premium;
   }
 

@@ -86,7 +86,7 @@ export default function RiskPoolCard(pool: RiskPoolCardProps) {
               <p className="font-bold text-secondary">
                 Current Pool Funds:{" "}
                 {poolData.totalFunds
-                  ? formatEther(BigInt(poolData.totalFunds))
+                  ? (Number(poolData.totalFunds) / 10 ** 18).toFixed(2)
                   : "0"}{" "}
                 MNT
               </p>
@@ -101,13 +101,13 @@ export default function RiskPoolCard(pool: RiskPoolCardProps) {
                   <strong className="font-bold">Pool Cap:</strong>{" "}
                   {poolData.cap ? formatEther(BigInt(poolData.cap)) : "0"} MNT
                 </p>
-                <p>
+                {/* <p>
                   <strong className="font-bold">Rewards available:</strong>{" "}
                   {poolData.rewards
                     ? Math.round(Number(formatEther(BigInt(poolData.rewards))))
                     : "0"}{" "}
                   MNT
-                </p>
+                </p> */}
                 {address && (
                   <Details
                     riskLevel={riskLevelIndex}

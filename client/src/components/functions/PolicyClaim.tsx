@@ -18,10 +18,14 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PolicyContract } from "@/components/interfaces/Policy";
+import Policy, { PolicyContract } from "@/components/interfaces/Policy";
 import { useWriteContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Zod schema for form validation
 const policyClaimSchema = z.object({
@@ -62,6 +66,34 @@ export default function PolicyClaimForm(props: { policy: PolicyContract }) {
     // Handle claim submission (e.g., call smart contract function)
     const { claimAmount, reason } = data;
     try {
+      const prompt = `
+        There are six categories of Insurance services:
+            1. Governance Attack Protection
+            2. Exchange Hack Compensation
+            3. DeFi Yield Farming Insurance
+            4. Stablecoin Depeg Safety Net
+            5. Crypto Rug Pull Protection
+            6. Smart Contract Vulnerability Shield
+            
+        Now policy holder can claim their insurance with a reason. What I want you to do is return a boolean value: true or false when I send you the reason along with the policy name based on if the reason comes under the policy.
+
+        Give me a boolean value true or false only. 
+
+        ${reason} is the reason for the claim under ${policy.name} policy.
+        `;
+
+      const result = await model.generateContent(prompt);
+      const responseText =
+        result.response.candidates?.[0]?.content.parts[0].text;
+      console.log("Generated response:", responseText);
+
+      if (responseText?.toLowerCase().includes("true")) {
+        console.log("Claim is valid. Filing claim...");
+      } else {
+        console.log("Claim is invalid. Aborting claim...");
+        return;
+      }
+
       const tx = await writeContractAsync(
         {
           address: contractAddress,
