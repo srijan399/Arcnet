@@ -35,7 +35,7 @@ export default function PoliciesPage() {
     const interval = setInterval(() => {
       refetch()
         .then((result: any) => {
-          console.log("My policy Data refetched: ", result);
+          // console.log("My policy Data refetched: ", result);
           setMyPolicies(result.data as PolicyContract[]);
         })
         .catch((error: any) => {

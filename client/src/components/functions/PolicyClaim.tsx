@@ -23,6 +23,7 @@ import { useWriteContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { toast } from "sonner";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -89,6 +90,7 @@ export default function PolicyClaimForm(props: { policy: PolicyContract }) {
 
       if (responseText?.toLowerCase().includes("true")) {
         console.log("Claim is valid. Filing claim...");
+        toast.success("Claim is valid. Filing claim...");
       } else {
         console.log("Claim is invalid. Aborting claim...");
         return;
