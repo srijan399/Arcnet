@@ -1,7 +1,7 @@
 import Navbar from "@/components/functions/Navbar";
-import Hero from "@/components/functions/HeroSection";
-import CallToAction from "@/components/functions/CallToAction";
-import Footer from "@/components/functions/Footer";
+import Hero from "@/components/functions/Nav/HeroSection";
+import CallToAction from "@/components/functions/Nav/CallToAction";
+import Footer from "@/components/functions/Nav/Footer";
 import Meteors from "@/components/ui/meteors";
 
 function Landing() {

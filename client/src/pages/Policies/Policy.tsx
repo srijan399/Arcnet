@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import PolicyCard from "../../components/functions/PolicyCard";
+import PolicyCard from "../../components/functions/P_Card";
 import Navbar from "@/components/functions/Navbar";
 import { policyList } from "./policies";
 import { Button } from "@/components/ui/button";
@@ -8,25 +8,6 @@ import Policy, { PolicyContract } from "@/components/interfaces/Policy";
 import { useAccount, useReadContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import PolicyClaimForm from "@/components/functions/PolicyClaim";
-// import {
-//   Dialog,
-//   DialogTrigger,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-// } from "@/components/ui/dialog";
-// import {
-//   Form,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormControl,
-//   FormMessage,
-// } from "@/components/ui/form";
-// import { Input } from "@/components/ui/input";
-// import { useForm } from "react-hook-form";
-// import { z } from "zod";
-// import { zodResolver } from "@hookform/resolvers/zod";
 
 const policies = policyList;
 
@@ -68,10 +49,6 @@ export default function PoliciesPage() {
   }, [refetch]);
 
   console.log("Data: ", data);
-
-  const handleClaim = () => {
-    console.log("Claim submitted successfully");
-  };
 
   return (
     <div className="min-h-screen bg-background text-text">
@@ -124,8 +101,11 @@ export default function PoliciesPage() {
                 <h3 className="text-base md:text-lg font-bold">
                   {policy.name}
                 </h3>
-                <p className="text-sm text-gray-300 mt-2">{policy.coverage}</p>
-                <p className="text-sm text-gray-300 mt-2">{policy.premium}</p>
+                {/* <p className="text-sm text-gray-300 mt-2">{policy.premium}</p> */}
+                <p className="text-sm text-gray-300 mt-2">
+                  <strong className="font-bold">Policy ID:</strong> #
+                  {Number(policy.policyId)}
+                </p>
                 <div className="flex justify-between items-center mt-4">
                   <div>
                     <p className="text-xs md:text-sm">
@@ -138,16 +118,12 @@ export default function PoliciesPage() {
                         Number(policy.expiry) * 1000
                       ).toLocaleDateString("en-GB")}
                     </p>
+                    <p className="text-xs md:text-sm">
+                      <span className="font-semibold">Coverage:</span>{" "}
+                      {Number(policy.coverage) / 10 ** 18} MNT
+                    </p>
                   </div>
-
-                  {/* Claim button */}
-                  {/* <Button
-                    onClick={() => handleClaim()}
-                    className="bg-blue-600 hover:bg-blue-500 text-xs md:text-sm px-3 py-2 rounded-lg"
-                  >
-                    Claim
-                  </Button> */}
-                  <PolicyClaimForm />
+                  <PolicyClaimForm policy={policy} />
                 </div>
               </div>
             ))
@@ -170,11 +146,3 @@ export default function PoliciesPage() {
     </div>
   );
 }
-
-// const policyClaimSchema = z.object({
-//   policyId: z.string().min(1, "Policy ID is required"),
-//   claimAmount: z.number().positive("Claim amount must be greater than zero"),
-//   reason: z.string().min(10, "Reason must be at least 10 characters long"),
-// });
-
-// function ClaimForm() {}

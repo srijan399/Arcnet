@@ -1,6 +1,6 @@
 import { useReadContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 // import Navbar from "@/components/functions/Navbar";
 import { LiquidityProvider } from "@/components/interfaces/Pool";
 // import { formatEther } from "viem";
@@ -12,10 +12,6 @@ export default function Details(props: any) {
     functionName: "getLiquidityProviderDetails",
     args: [props.riskLevel, props.address], // Only pass the risk level now
   });
-
-  // const [providerData, setProviderData] = useState<LiquidityProvider>(
-  //   {} as LiquidityProvider
-  // );
 
   const { providerData, setProviderData } = props;
 
@@ -37,7 +33,7 @@ export default function Details(props: any) {
     };
   }, [refetch]);
 
-  // console.log(data);
+  console.log(data);
 
   return (
     <>

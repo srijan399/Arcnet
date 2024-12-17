@@ -63,6 +63,7 @@ export default function ClaimRewards(props: {
         console.log("Transaction hash:", tx);
         setTransactionHash(tx);
         setTransactionStatus("Transaction confirmed!");
+        console.log(transactionHash, transactionStatus);
       }
     } catch (error) {
       console.error("Error submitting transaction:", error);

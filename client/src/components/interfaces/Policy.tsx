@@ -13,6 +13,7 @@ export default interface Policy {
 }
 
 export interface PolicyContract {
+  policyId: string;
   policyholder: string;
   coverage: string;
   premium: string;

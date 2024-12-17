@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -37,7 +36,7 @@ const formSchema = z.object({
     })
     .transform((val) => Number(val))
     .refine((val) => val >= 5 && val <= 20, {
-      message: "Coverage must be between 5 ETH and 20 ETH.",
+      message: "Coverage must be between 5 MNT and 20 MNT.",
     }),
 
   duration: z
@@ -78,7 +77,6 @@ function BuyForm({ policy }: PolicyCardProps) {
   const [transactionHash, setTransactionHash] = useState<string | undefined>(
     undefined
   );
-  const [isOpen, setIsOpen] = useState(true);
 
   const dub = { transactionHash, transactionStatus };
   console.log(dub);
@@ -97,13 +95,21 @@ function BuyForm({ policy }: PolicyCardProps) {
     const riskFactor = policy.riskNumber;
     const premium = calcPremium();
 
+    const policyID = Date.now();
+
     try {
       const tx = await writeContractAsync(
         {
           address: contractAddress,
           abi: contractAbi,
           functionName: "purchasePolicy",
-          args: [parseEther(coverage.toString()), duration, riskFactor, title],
+          args: [
+            parseEther(coverage.toString()),
+            duration,
+            riskFactor,
+            title,
+            policyID,
+          ],
           value: parseEther(premium.toString()),
         },
         {
@@ -139,7 +145,7 @@ function BuyForm({ policy }: PolicyCardProps) {
   function calcPremium() {
     const { coverage, duration } = form.getValues();
     const premium = (coverage * duration * policy.riskNumber) / (12 * 3);
-    console.log(`Your One Time premium is ${premium} ETH`);
+    console.log(`Your One Time premium is ${premium} MNT`);
     return premium;
   }
 
@@ -177,7 +183,7 @@ function BuyForm({ policy }: PolicyCardProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm sm:text-base">
-                  Coverage (in ETH)
+                  Coverage (in MNT)
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -188,7 +194,7 @@ function BuyForm({ policy }: PolicyCardProps) {
                   />
                 </FormControl>
                 <FormDescription className="text-xs sm:text-sm">
-                  Coverage must be between 5-20 ETH.
+                  Coverage must be between 5-20 MNT.
                 </FormDescription>
                 <FormMessage className="text-red-600 text-xs sm:text-sm" />
               </FormItem>

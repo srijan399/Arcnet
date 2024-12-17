@@ -133,9 +133,9 @@ export default function FundForm(pool: Pool) {
             name="fund"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Fund Amount (in ETH)</FormLabel>
+                <FormLabel>Fund Amount (in MNT)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="10 ETH" {...field} />
+                  <Input type="number" placeholder="10 MNT" {...field} />
                 </FormControl>
                 <FormDescription>
                   Funding amount must be between less than Pool Cap
