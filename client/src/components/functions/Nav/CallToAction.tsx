@@ -1,8 +1,8 @@
 // components/CallToAction.jsx
 
 import { Link } from "react-router-dom";
-import { Button } from "../ui/button";
-import { CoolMode } from "../ui/cool-mode";
+import { Button } from "../../ui/button";
+import { CoolMode } from "../../ui/cool-mode";
 
 const CallToAction = () => {
   return (

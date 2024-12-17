@@ -1,5 +1,5 @@
-import ShimmerButton from "../ui/shimmer-button";
-import TypingAnimation from "../ui/typing-animation";
+import ShimmerButton from "../../ui/shimmer-button";
+import TypingAnimation from "../../ui/typing-animation";
 import { useNavigate } from "react-router-dom";
 
 // components/Hero.jsx
