@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Policy, { PolicyContract } from "@/components/interfaces/Policy";
+import { PolicyContract } from "@/components/interfaces/Policy";
 import { useWriteContract } from "wagmi";
 import contractAbi, { contractAddress } from "@/abi";
 import { useState } from "react";
