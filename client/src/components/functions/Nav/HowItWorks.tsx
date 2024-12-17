@@ -1,6 +1,6 @@
 // components/RiskPools.jsx
-import { Button } from "../ui/button";
-import Particles from "../ui/particles";
+import { Button } from "../../ui/button";
+import Particles from "../../ui/particles";
 
 const RiskPools = () => {
   const pools = [
