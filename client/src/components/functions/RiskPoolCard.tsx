@@ -69,7 +69,7 @@ export default function RiskPoolCard(pool: RiskPoolCardProps) {
   return (
     <>
       {address ? (
-        Number(poolData.expiry) ? (
+        Number(poolData?.expiry) ? (
           <Card className={`${color} border-2 m-3`}>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
@@ -88,7 +88,7 @@ export default function RiskPoolCard(pool: RiskPoolCardProps) {
                 {poolData.totalFunds
                   ? (Number(poolData.totalFunds) / 10 ** 18).toFixed(2)
                   : "0"}{" "}
-                MNT
+                ETH
               </p>
               <p className="font-semibold">Reward System:</p>
               <p>{rewardSystem}</p>
@@ -99,14 +99,14 @@ export default function RiskPoolCard(pool: RiskPoolCardProps) {
                 )}
                 <p>
                   <strong className="font-bold">Pool Cap:</strong>{" "}
-                  {poolData.cap ? formatEther(BigInt(poolData.cap)) : "0"} MNT
+                  {poolData.cap ? formatEther(BigInt(poolData.cap)) : "0"} ETH
                 </p>
                 {/* <p>
                   <strong className="font-bold">Rewards available:</strong>{" "}
                   {poolData.rewards
                     ? Math.round(Number(formatEther(BigInt(poolData.rewards))))
                     : "0"}{" "}
-                  MNT
+                  ETH
                 </p> */}
                 {address && (
                   <Details

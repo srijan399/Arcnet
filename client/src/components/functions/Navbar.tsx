@@ -56,13 +56,7 @@ const Navbar = () => {
 
           {/* Connect Button */}
           <div className="flex justify-center md:justify-start">
-            <ConnectButton
-              accountStatus={{
-                smallScreen: "avatar",
-                largeScreen: "full",
-              }}
-              chainStatus="none"
-            />
+            <ConnectButton />
           </div>
         </div>
       </div>

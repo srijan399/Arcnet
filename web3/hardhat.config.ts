@@ -5,28 +5,28 @@ import "dotenv/config";
 
 const ALCHEMY_RPC_URL = process.env.ALCHEMY_RPC_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const MANTLESCAN_API_KEY = process.env.MANTLESCAN_API_KEY;
+const LINEASCAN_API_KEY = process.env.LINEASCAN_API_KEY;
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
-    mantleSepolia: {
+    lineaSepolia: {
       url: `${ALCHEMY_RPC_URL}`,
       accounts: [`${PRIVATE_KEY}`],
-      chainId: 5003,
+      chainId: 59141,
     },
   },
   etherscan: {
     apiKey: {
-      mantleSepolia: `${MANTLESCAN_API_KEY}`,
+      lineaSepolia: `${LINEASCAN_API_KEY}`,
     },
     customChains: [
       {
-        network: "mantleSepolia",
-        chainId: 5003,
+        network: "lineaSepolia",
+        chainId: 59141,
         urls: {
-          apiURL: `https://api-sepolia.mantlescan.xyz/api`,
-          browserURL: "https://sepolia.mantlescan.xyz/",
+          apiURL: `https://api-sepolia.lineascan.build/api`,
+          browserURL: "https://sepolia.lineascan.build",
         },
       },
     ],

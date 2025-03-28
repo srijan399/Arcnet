@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import BuyForm from "@/components/functions/BuyForm";
 import Policy from "@/components/interfaces/Policy";
 import { useAccount } from "wagmi";
+import { useState } from "react";
 
 interface PolicyCardProps {
   policy: Policy;
@@ -24,6 +25,7 @@ const riskLevelConfig = {
 export default function PolicyCard({ policy }: PolicyCardProps) {
   const { color, icon: Icon } = riskLevelConfig[policy.riskLevel];
   const account = useAccount();
+  const [open, setOpen] = useState(false);
 
   return (
     <motion.div
@@ -70,7 +72,7 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
               </ul>
             </PopoverContent>
           </Popover>
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button
                 className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
@@ -80,7 +82,7 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
               </Button>
             </DialogTrigger>
             {account?.address ? (
-              <BuyForm policy={policy} />
+              <BuyForm policy={policy} setOpen={setOpen} />
             ) : (
               <DialogContent className="bg-gray-900 text-white p-4 rounded-md shadow-md max-w-sm font-arimo">
                 <h3 className="text-lg font-bold mb-2">

@@ -24,6 +24,7 @@ import contractAbi, { contractAddress } from "@/abi";
 import { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { toast } from "sonner";
+import { parseEther } from "viem";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -66,6 +67,7 @@ export default function PolicyClaimForm(props: { policy: PolicyContract }) {
     console.log("Claim Form Submitted:", data);
     // Handle claim submission (e.g., call smart contract function)
     const { claimAmount, reason } = data;
+    console.log("Claim Amount:", claimAmount);
     try {
       const prompt = `
         There are six categories of Insurance services:
@@ -101,7 +103,7 @@ export default function PolicyClaimForm(props: { policy: PolicyContract }) {
           address: contractAddress,
           abi: contractAbi,
           functionName: "fileClaim",
-          args: [policy.policyId, claimAmount, reason],
+          args: [policy.policyId, parseEther(claimAmount.toString()), reason],
         },
         {
           onSuccess(data: any) {

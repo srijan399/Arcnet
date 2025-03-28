@@ -36,8 +36,8 @@ const formSchema = z.object({
       message: "Coverage must be a number",
     })
     .transform((val) => Number(val))
-    .refine((val) => val >= 5 && val <= 20, {
-      message: "Coverage must be between 5 MNT and 20 MNT.",
+    .refine((val) => val >= 0.01 && val <= 5, {
+      message: "Coverage must be between 0.01 ETH and 5 ETH.",
     }),
 
   duration: z
@@ -59,7 +59,7 @@ const formSchema = z.object({
   ]),
 });
 
-function BuyForm({ policy }: PolicyCardProps) {
+function BuyForm({ policy, setOpen }: PolicyCardProps & { setOpen: any }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -141,6 +141,7 @@ function BuyForm({ policy }: PolicyCardProps) {
       setTransactionStatus("Transaction failed.");
     }
     form.reset();
+    setOpen(false);
   }
 
   function calcPremium() {
@@ -148,7 +149,7 @@ function BuyForm({ policy }: PolicyCardProps) {
     const premium = (coverage * duration * policy.riskNumber) / (12 * 3);
     console.log(`Your One Time premium is ${premium} MNT`);
     toast.success("Premium Calculated", {
-      description: `Your one-time premium is ${premium.toFixed(2)} MNT`,
+      description: `Your one-time premium is ${premium.toFixed(3)} ETH`,
       duration: 3000, // Optional: specify duration
     });
     return premium;
@@ -199,7 +200,7 @@ function BuyForm({ policy }: PolicyCardProps) {
                   />
                 </FormControl>
                 <FormDescription className="text-xs sm:text-sm">
-                  Coverage must be between 5-20 MNT.
+                  Coverage must be between 0.01-5 ETH.
                 </FormDescription>
                 <FormMessage className="text-red-600 text-xs sm:text-sm" />
               </FormItem>

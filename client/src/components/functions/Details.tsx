@@ -45,7 +45,7 @@ export default function Details(props: any) {
           </p>
           <p>
             <strong className="font-bold">Rewards earned:</strong>{" "}
-            {(Number(providerData.rewardsEarned) / 10 ** 18).toFixed(2)} MNT
+            {(Number(providerData.rewardsEarned) / 10 ** 18).toFixed(2)} ETH
           </p>
         </div>
       ) : (

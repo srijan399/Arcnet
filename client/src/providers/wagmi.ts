@@ -1,32 +1,24 @@
 import { http, createConfig, createStorage } from "wagmi";
 import {
-  sepolia,
-  mainnet,
   baseSepolia,
-  polygonAmoy,
   mantleSepoliaTestnet,
+  linea,
+  lineaSepolia,
 } from "wagmi/chains";
 import { connectors } from "./wallets";
 import { Chain } from "@rainbow-me/rainbowkit";
 
-const chains: readonly [Chain, ...Chain[]] = [
-  sepolia,
-  mainnet,
-  baseSepolia,
-  polygonAmoy,
-  mantleSepoliaTestnet,
-];
+const chains: readonly [Chain, ...Chain[]] = [lineaSepolia, linea];
 
 export const config = createConfig({
   chains,
   storage: createStorage({ storage: window.localStorage }),
   connectors,
   transports: {
-    [sepolia.id]: http(),
-    [mainnet.id]: http(),
+    [lineaSepolia.id]: http(),
     [baseSepolia.id]: http(),
-    [polygonAmoy.id]: http(),
     [mantleSepoliaTestnet.id]: http(),
+    [linea.id]: http(),
   },
   ssr: true,
 });

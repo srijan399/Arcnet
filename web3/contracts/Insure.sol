@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.28;
 
 contract Insure {
     // Structs
@@ -70,23 +70,18 @@ contract Insure {
 
     // Constructor
     constructor() {
-        pools[RiskLevel.Low] = Pool(
-            0,
-            0,
-            100 ether,
-            block.timestamp + 200 days
-        );
+        pools[RiskLevel.Low] = Pool(0, 0, 20 ether, block.timestamp + 270 days);
         pools[RiskLevel.Medium] = Pool(
             0,
             0,
-            200 ether,
+            30 ether,
             block.timestamp + 250 days
         );
         pools[RiskLevel.High] = Pool(
             0,
             0,
-            300 ether,
-            block.timestamp + 270 days
+            40 ether,
+            block.timestamp + 200 days
         );
     }
 
@@ -172,6 +167,8 @@ contract Insure {
         Policy[] storage userPolicies = policies[msg.sender];
         bool policyFound = false;
 
+        emit ClaimFiled(msg.sender, policyId, claimAmount);
+
         for (uint256 i = 0; i < userPolicies.length; i++) {
             if (userPolicies[i].policyId == policyId) {
                 Policy storage policy = userPolicies[i];
@@ -200,7 +197,6 @@ contract Insure {
                 policy.reason = reason;
 
                 // Emit events
-                emit ClaimFiled(msg.sender, policyId, claimAmount);
                 emit ClaimApproved(msg.sender, policyId, claimAmount);
 
                 policyFound = true;

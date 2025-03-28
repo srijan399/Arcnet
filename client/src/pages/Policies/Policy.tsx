@@ -14,7 +14,7 @@ const policies = policyList;
 export default function PoliciesPage() {
   // State to control the off-canvas visibility
   const [isOffCanvasOpen, setIsOffCanvasOpen] = useState(false);
-  const [myPolicies, setMyPolicies] = useState<PolicyContract[]>([]);
+  const [myPolicies, setMyPolicies] = useState<PolicyContract[] | null>(null);
   const account = useAccount();
 
   // Toggle the off-canvas
@@ -91,7 +91,7 @@ export default function PoliciesPage() {
 
         {/* Policies container */}
         <div className="space-y-4 overflow-y-auto max-h-[90vh]">
-          {myPolicies.length ? (
+          {myPolicies && myPolicies.length > 0 ? (
             myPolicies.map((policy) => (
               <div
                 key={policy.policyholder}

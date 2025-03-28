@@ -544,5 +544,5 @@ const contractAbi = [
 
 export default contractAbi;
 
-const contractAddress = "0xE9F73bBfb210bC484821f5998b6b5efC38F9Cd00";
+const contractAddress = "0x47B6DcD48414B9c4B42311DaB05DF17E9827Dd3b";
 export { contractAddress };
